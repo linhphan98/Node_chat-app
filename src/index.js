@@ -109,7 +109,8 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 		if(room){
 			io.emit("message", generateMessage("admin", `Room ${room.room} has been removed`))
 			io.emit("roomDataRoom", {
-				rooms: getRooms()
+				rooms: getRooms(),
+				userName: user.userName
 			})
 		}
 
