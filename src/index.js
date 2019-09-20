@@ -4,7 +4,7 @@ const http = require("http")
 const socketio = require("socket.io")
 const Filter = require("bad-words")
 const {generateMessage, generateLocationMessage} = require("./utils/messages")
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./utils/users")
+const { addUser, removeUser, getUser, getUsersInRoom, addRoom, getRooms, removeRoom, existingRoom } = require("./utils/users")
 
 // server(emit) --> client(receive) --> acknowledgement --> server
 
@@ -31,6 +31,9 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 	socket.on("join", function({userName, room}, callback){
 		
 		const { error, user } = addUser({ id: socket.id, userName, room })
+		const existRoom = existingRoom(user)
+		const roomList = addRoom(room)
+
 		if(error){
 			return callback(error)
 		}
@@ -41,13 +44,23 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 
 		socket.emit("message", generateMessage("admin", "Welcome!"))
 		socket.broadcast.to(user.room).emit("message", generateMessage("admin" ,`${user.userName} has joined!`)) // this will emit new user message to every user except for the one that is loging in 
-		
+
+		if(!existRoom){
+			socket.broadcast.emit("message", generateMessage("admin", `Room ${roomList.room} has been added to the list!`))
+		}
+
+		// send all the rooms available
 		// send the list of users to the new user as well as update the list for the old users
+		io.emit("roomDataRoom", {
+			rooms: getRooms()
+		})
+
 		io.to(user.room).emit("roomData", {
 			room: user.room,
 			users: getUsersInRoom(user.room)
 		})
-
+		
+	 	
 		callback()
 	})
 
@@ -85,10 +98,20 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 	socket.on("disconnect", function(){
 
 		const user = removeUser(socket.id) // we either get the user that is removed as an object or undefined 
-
+		
 		if(user) {
-			// we don't need to do broadcast because that socket will not receive the message anyway 
+			const room = removeRoom(user.room)
+
+		// we don't need to do broadcast because that socket will not receive the message anyway 
 		io.to(user.room).emit("message", generateMessage( "admin" ,`${user.userName} has left!`))
+
+		if(room){
+			io.emit("message", generateMessage("admin", `Room ${room.room} has been removed`))
+			io.emit("roomDataRoom", {
+				rooms: getRooms()
+			})
+		}
+
 		io.to(user.room).emit("roomData", {
 				room: user.room,
 				users: getUsersInRoom(user.room)

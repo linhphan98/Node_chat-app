@@ -18,12 +18,13 @@ const $messageFormInput = $messageForm.querySelector("input")
 const $messageFormButton = $messageForm.querySelector("button")
 const $sendLocationButton = document.querySelector("#send-location")
 const $messages = document.querySelector("#messages")
-
+const $users = document.querySelector("#users")
 
 // Templates
 const messageTemplate = document.querySelector("#message-template").innerHTML // give us access  to the HTML contained inside that is <p></p> and div
 const locationMessageTemplate = document.querySelector("#locationMessage-template").innerHTML
-const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
+const sidebarTemplateRooms = document.querySelector("#sidebar-template-rooms").innerHTML
+const sidebarTemplateUsers = document.querySelector("#sidebar-template-users").innerHTML
 
 // Options
 const { userName, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }) // what we get back is an object, it has all the key and value of the properties: name and room  
@@ -122,14 +123,21 @@ $sendLocationButton.addEventListener("click", function(){
 	})
 })
 
-socket.on("roomData", function({ room, users }){
-	 const html = Mustache.render(sidebarTemplate, {
+socket.on("roomData", function({ room, users}){
+	 const html = Mustache.render(sidebarTemplateUsers, {
 	 	 room, 
 	 	 users
 	 }) 
-	document.querySelector("#sidebar").innerHTML = html  
-
+	document.querySelector("#users").innerHTML = html  
 })
+
+socket.on("roomDataRoom", function({rooms}){
+	const html = Mustache.render(sidebarTemplateRooms, {
+		rooms
+	})
+	document.querySelector("#rooms").innerHTML = html
+})
+
 
 socket.emit("join", {userName, room}, function(error){ // accept the username you going to use and the room you gonna join
 	if(error) {

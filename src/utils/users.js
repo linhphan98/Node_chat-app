@@ -1,5 +1,5 @@
 const users = []
-
+const rooms = []
 
 // addUser, to track a new user
 
@@ -31,6 +31,7 @@ const addUser = function({ id, userName, room }){ // every socket has unique id 
 	const user = { id, userName, room }
 	users.push(user) // push the user onto the array together with id, userName, room
 	return { user }
+
 } 
 
 
@@ -65,9 +66,54 @@ const getUsersInRoom = function(room){
 	})
 }
 
+const addRoom = function(room){
+	room = room.trim().toLowerCase()
+
+	const existingRoom = rooms.find(function(room2){
+		return room2.room == room
+	})
+
+	if(existingRoom){
+		return {room}
+	}
+
+	const roomName = {room}
+	rooms.push(roomName)
+	return {room}
+	
+}
+
+const getRooms = function(){
+	return rooms
+}
+
+const removeRoom = function(room){
+	const users_InARoom = getUsersInRoom(room) // give users left in the room
+	const index = rooms.findIndex(function(room2){
+		return room2.room == room
+	})
+
+	if(!users_InARoom[0]){
+		return rooms.splice(index, 1)[0]
+	}
+}
+
+const existingRoom = function(user){
+	const exist = rooms.find(function(room2){
+		return room2.room == user.room
+	})
+	if(exist){
+		return exist
+	}
+}
+
 module.exports = {
 	addUser, 
 	removeUser, 
 	getUser,
-	getUsersInRoom
+	getUsersInRoom,
+	addRoom,
+	getRooms,
+	removeRoom,
+	existingRoom
 }
