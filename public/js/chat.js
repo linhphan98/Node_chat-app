@@ -131,9 +131,10 @@ socket.on("roomData", function({ room, users}){
 	document.querySelector("#users").innerHTML = html  
 })
 
-socket.on("roomDataRoom", function({rooms}){
+socket.on("roomDataRoom", function({rooms, userName}){
 	const html = Mustache.render(sidebarTemplateRooms, {
-		rooms
+		rooms,
+		userName
 	})
 	document.querySelector("#rooms").innerHTML = html
 })

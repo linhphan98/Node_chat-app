@@ -52,7 +52,8 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 		// send all the rooms available
 		// send the list of users to the new user as well as update the list for the old users
 		io.emit("roomDataRoom", {
-			rooms: getRooms()
+			rooms: getRooms(),
+			userName
 		})
 
 		io.to(user.room).emit("roomData", {
