@@ -19,6 +19,7 @@ const $messageFormButton = $messageForm.querySelector("button")
 const $sendLocationButton = document.querySelector("#send-location")
 const $messages = document.querySelector("#messages")
 const $users = document.querySelector("#users")
+const $moveUser = document.querySelector("#moveUser")
 
 // Templates
 const messageTemplate = document.querySelector("#message-template").innerHTML // give us access  to the HTML contained inside that is <p></p> and div
@@ -56,7 +57,6 @@ const autoScroll = function(){
 }
 
 socket.on("message", function(message){ // in this case message is an object with value of generateMessage("Welcome!")
-	console.log(message)
 	const html = Mustache.render(messageTemplate, {
 		userName : message.userName,
 		message123  : message.text,
@@ -123,6 +123,7 @@ $sendLocationButton.addEventListener("click", function(){
 	})
 })
 
+
 socket.on("roomData", function({ room, users}){
 	 const html = Mustache.render(sidebarTemplateUsers, {
 	 	 room, 
@@ -146,3 +147,13 @@ socket.emit("join", {userName, room}, function(error){ // accept the username yo
 		location.href = "/" // this will redirect the user back to the root or the join webpage
 	}
 })  
+
+$moveUser.addEventListener("click", function(){
+	socket.emit("join", {userName, room}, function(error){
+		if(error) {
+			alert(error)
+			location.href = ""
+		}
+	})
+})
+

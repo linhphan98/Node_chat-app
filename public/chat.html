@@ -60,7 +60,9 @@
 			<ul class="rooms">
 			<!-- 	This is the syntax for opening and closing for the array, everything inside is going to happen to each of the element inside the array and we have access to the data for that object/element -->
 				{{#rooms}}
-					<li><a href="https://john-node-chat-app.herokuapp.com/chat.html?userName={{ userName }}&room={{ room }}">{{ room }}</a></li>
+					<!-- <li><a href="https://john-node-chat-app.herokuapp.com/chat.html?userName={{ userName }}&room={{ room }}">{{ room }}</a></li> -->
+					<li><button id="moveUser"><a href="https://john-node-chat-app.herokuapp.com/chat.html?userName={{userName}}&room={{room}}">{{ room }}</a></li></button>
+					
 				{{/rooms}}
 			</ul>
 		</script>

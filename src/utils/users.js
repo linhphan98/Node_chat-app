@@ -98,12 +98,15 @@ const removeRoom = function(room){
 	}
 }
 
-const existingRoom = function(user){
+const existingRoom = function(user,error){
+	if(!error){
 	const exist = rooms.find(function(room2){
 		return room2.room == user.room
 	})
+
 	if(exist){
 		return exist
+		}
 	}
 }
 
