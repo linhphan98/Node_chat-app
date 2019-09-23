@@ -32,7 +32,7 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 		
 		const { error, user } = addUser({ id: socket.id, userName, room })
 		const existRoom = existingRoom(user, error)
-		const roomList = addRoom(room)
+		const roomList = addRoom(room)	
 
 		if(error){
 			return callback(error)

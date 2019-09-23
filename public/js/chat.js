@@ -149,10 +149,10 @@ socket.emit("join", {userName, room}, function(error){ // accept the username yo
 })  
 
 $moveUser.addEventListener("click", function(){
-	socket.emit("join", {userName, room}, function(error){
+	socket.emit("join",{ room }, function(error){
 		if(error) {
 			alert(error)
-			location.href = ""
+			location.href = "/"
 		}
 	})
 })
