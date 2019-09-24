@@ -34,6 +34,9 @@ io.on("connection", function(socket){ //connection is gonna fire whenever socket
 		const existRoom = existingRoom(user, error)
 		const roomList = addRoom(room)	
 
+		console.log(userName)
+		console.log(room)
+		
 		if(error){
 			return callback(error)
 		}
